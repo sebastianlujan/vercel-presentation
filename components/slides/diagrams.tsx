@@ -95,29 +95,47 @@ export function Diagram({ type }: { type: DiagramType }) {
   }
 }
 
-// Vercel Intro Hero - clean triangle
+// Vercel Intro Hero - SF minimalism with particles
 function IntroHeroDiagram() {
   return (
-    <div className="flex flex-col items-center justify-center gap-10 p-8 w-full min-h-[350px]">
-      {/* Main Triangle - Vercel logo */}
-      <div className="float-animation triangle-glow">
+    <div className="relative flex items-center justify-center w-full min-h-[420px] overflow-hidden">
+      {/* Fog gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80" />
+      
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="particle absolute w-[2px] h-[2px] bg-white/20 rounded-full"
+            style={{
+              left: `${5 + (i * 4.5)}%`,
+              animationDelay: `${i * 0.3}s`,
+              animationDuration: `${8 + (i % 5) * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* Subtle radial glow behind triangle */}
+      <div className="absolute w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-3xl" />
+      
+      {/* Main Triangle */}
+      <div className="relative z-10 float-animation">
         <svg 
-          width="120" 
-          height="104" 
+          width="140" 
+          height="121" 
           viewBox="0 0 76 65" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          className="triangle-glow"
         >
           <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
         </svg>
       </div>
       
-      {/* Key features */}
-      <div className="flex items-center gap-8">
-        {["AI SDK", "AI Gateway", "MCP", "v0"].map((label, i) => (
-          <span key={i} className="text-xs text-[#666] font-medium tracking-wide">{label}</span>
-        ))}
-      </div>
+      {/* Subtle horizontal line */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
     </div>
   )
 }

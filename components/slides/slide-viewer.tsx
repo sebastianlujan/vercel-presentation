@@ -226,22 +226,17 @@ function SlideContent({ slide }: { slide: Slide }) {
   const isStepSlide = slide.step !== undefined
   const isIntroHero = slide.diagram === "intro-hero"
   
-  // Special full-width layout for intro hero
+  // Special full-width layout for intro hero - SF minimalism
   if (isIntroHero) {
     return (
-      <div className="flex flex-col items-center justify-center">
-        {slide.highlight && (
-          <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/5 text-white/80 text-sm font-medium border border-white/10 mb-6">
-            {slide.highlight}
-          </div>
-        )}
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance text-white text-center mb-2">
+      <div className="flex flex-col items-center justify-center -mt-8">
+        <Diagram type={slide.diagram!} />
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white text-center mt-8">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-lg md:text-xl text-[#666] max-w-xl mx-auto text-center mb-8">{slide.subtitle}</p>
+          <p className="text-base md:text-lg text-[#555] max-w-md mx-auto text-center mt-3 font-light">{slide.subtitle}</p>
         )}
-        <Diagram type={slide.diagram!} />
       </div>
     )
   }

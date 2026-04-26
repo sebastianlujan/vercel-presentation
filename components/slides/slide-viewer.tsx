@@ -248,8 +248,8 @@ function SlideContent({ slide }: { slide: Slide }) {
               buidlers
             </span>
             <span
-              className="ml-[3px] inline-block bg-[#e8e05a] blink-rect"
-              style={{ width: "0.45rem", height: "1.9rem" }}
+              className="ml-[4px] inline-block bg-[#e8e05a] blink-rect"
+              style={{ width: "1.1rem", height: "1.9rem" }}
             />
           </div>
         </div>

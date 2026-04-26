@@ -628,9 +628,9 @@ function HackathonDiagram() {
 function VercelEcosystemDiagram() {
   return (
     <div className="flex flex-col items-center gap-5 p-6 w-full">
-      {/* Vercel Logo */}
-      <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-xl float-animation">
-        <VercelLogo className="w-8 h-8 text-black" />
+      {/* Vercel Logo - just the triangle */}
+      <div className="float-animation">
+        <VercelLogo className="w-12 h-12 text-white" />
       </div>
       
       <div className="text-sm font-semibold text-white">Vercel Platform</div>

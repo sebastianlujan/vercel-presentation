@@ -95,33 +95,29 @@ export function Diagram({ type }: { type: DiagramType }) {
   }
 }
 
-// Vercel Intro Hero - 3D triangle
-import dynamic from "next/dynamic"
-
-const VercelTriangle3D = dynamic(
-  () => import("./vercel-triangle-3d").then((mod) => mod.VercelTriangle3D),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="w-[320px] h-[320px] flex items-center justify-center">
+// Vercel Intro Hero - clean triangle
+function IntroHeroDiagram() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-10 p-8 w-full min-h-[350px]">
+      {/* Main Triangle - Vercel logo */}
+      <div className="float-animation triangle-glow">
         <svg 
-          width="100" 
-          height="87" 
+          width="120" 
+          height="104" 
           viewBox="0 0 76 65" 
           fill="none" 
-          className="opacity-30 animate-pulse"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
         </svg>
       </div>
-    )
-  }
-)
-
-function IntroHeroDiagram() {
-  return (
-    <div className="flex items-center justify-center w-full min-h-[380px]">
-      <VercelTriangle3D />
+      
+      {/* Key features */}
+      <div className="flex items-center gap-8">
+        {["AI SDK", "AI Gateway", "MCP", "v0"].map((label, i) => (
+          <span key={i} className="text-xs text-[#666] font-medium tracking-wide">{label}</span>
+        ))}
+      </div>
     </div>
   )
 }

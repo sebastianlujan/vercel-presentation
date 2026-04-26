@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Copy } from "lucide-react"
+import { Check, Copy, Triangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface CodeBlockProps {
@@ -9,60 +9,59 @@ interface CodeBlockProps {
   language?: string
 }
 
-// Simple syntax highlighting
+// Vercel-style syntax highlighting
 function highlightCode(code: string, language: string): React.ReactNode {
-  // Keywords for different languages
   const keywords = {
-    typescript: ["import", "export", "from", "const", "let", "var", "function", "async", "await", "return", "if", "else", "for", "while", "class", "interface", "type", "extends", "implements", "new", "this", "try", "catch", "throw", "default"],
-    tsx: ["import", "export", "from", "const", "let", "var", "function", "async", "await", "return", "if", "else", "for", "while", "class", "interface", "type", "extends", "implements", "new", "this", "try", "catch", "throw", "default"],
-    bash: ["npm", "npx", "pnpm", "yarn", "cd", "mkdir", "git", "vercel"],
+    typescript: ["import", "export", "from", "const", "let", "var", "function", "async", "await", "return", "if", "else", "for", "while", "class", "interface", "type", "extends", "implements", "new", "this", "try", "catch", "throw", "default", "true", "false", "null", "undefined"],
+    tsx: ["import", "export", "from", "const", "let", "var", "function", "async", "await", "return", "if", "else", "for", "while", "class", "interface", "type", "extends", "implements", "new", "this", "try", "catch", "throw", "default", "true", "false", "null", "undefined"],
+    sql: ["CREATE", "TABLE", "INSERT", "INTO", "VALUES", "SELECT", "FROM", "WHERE", "UPDATE", "DELETE", "ALTER", "DROP", "INDEX", "PRIMARY", "KEY", "FOREIGN", "REFERENCES", "NOT", "NULL", "DEFAULT", "UNIQUE", "ON", "CASCADE", "SET", "TEXT", "INTEGER", "BOOLEAN", "UUID", "TIMESTAMP", "JSONB", "SERIAL", "BIGSERIAL", "VARCHAR", "ENABLE", "ROW", "LEVEL", "SECURITY", "POLICY", "FOR", "USING", "WITH", "CHECK", "AND", "OR", "IF", "EXISTS", "ALL", "NOW", "REFERENCES", "CASCADE"],
+    bash: ["npm", "npx", "pnpm", "yarn", "cd", "mkdir", "git", "vercel", "supabase"],
   }
 
   const languageKeywords = keywords[language as keyof typeof keywords] || keywords.typescript
 
-  // Split into lines
   return code.split("\n").map((line, lineIndex) => {
     // Handle comments
-    if (line.trim().startsWith("//") || line.trim().startsWith("#")) {
+    if (line.trim().startsWith("//") || line.trim().startsWith("#") || line.trim().startsWith("--")) {
       return (
         <span key={lineIndex}>
-          <span className="text-zinc-500">{line}</span>
+          <span className="text-[#525252]">{line}</span>
           {lineIndex < code.split("\n").length - 1 && "\n"}
         </span>
       )
     }
 
-    // Process each word/token
+    // Process each token
     const tokens = line.split(/(\s+|[{}()\[\];,.:=<>]|"[^"]*"|'[^']*'|`[^`]*`)/)
     
     return (
       <span key={lineIndex}>
         {tokens.map((token, tokenIndex) => {
-          // Strings
+          // Strings - Vercel cyan/teal
           if (/^["'`]/.test(token)) {
-            return <span key={tokenIndex} className="text-emerald-400">{token}</span>
+            return <span key={tokenIndex} className="text-[#50e3c2]">{token}</span>
           }
-          // Keywords
-          if (languageKeywords.includes(token)) {
-            return <span key={tokenIndex} className="text-pink-400">{token}</span>
+          // Keywords - Vercel pink
+          if (languageKeywords.includes(token) || languageKeywords.includes(token.toUpperCase())) {
+            return <span key={tokenIndex} className="text-[#ff0080]">{token}</span>
           }
-          // Functions (word followed by parenthesis)
+          // Functions
           if (/^[a-zA-Z_]\w*$/.test(token) && tokens[tokenIndex + 1] === "(") {
-            return <span key={tokenIndex} className="text-blue-400">{token}</span>
+            return <span key={tokenIndex} className="text-[#0070f3]">{token}</span>
           }
           // Properties/methods after dot
           if (tokens[tokenIndex - 1] === "." && /^[a-zA-Z_]\w*$/.test(token)) {
-            return <span key={tokenIndex} className="text-cyan-400">{token}</span>
+            return <span key={tokenIndex} className="text-[#7928ca]">{token}</span>
           }
-          // Numbers
+          // Numbers - Vercel orange
           if (/^\d+$/.test(token)) {
-            return <span key={tokenIndex} className="text-amber-400">{token}</span>
+            return <span key={tokenIndex} className="text-[#f5a623]">{token}</span>
           }
           // Types (capitalized words)
           if (/^[A-Z][a-zA-Z]*$/.test(token)) {
-            return <span key={tokenIndex} className="text-yellow-300">{token}</span>
+            return <span key={tokenIndex} className="text-[#f5a623]">{token}</span>
           }
-          // Default
+          // Default - light gray
           return <span key={tokenIndex}>{token}</span>
         })}
         {lineIndex < code.split("\n").length - 1 && "\n"}
@@ -81,31 +80,39 @@ export function CodeBlock({ code, language = "typescript" }: CodeBlockProps) {
   }
 
   return (
-    <div className="relative group rounded-lg overflow-hidden shadow-xl">
-      <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+    <div className="relative group rounded-lg overflow-hidden border border-[#262626] bg-[#0a0a0a]">
+      {/* Copy button */}
+      <div className="absolute right-3 top-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
           size="sm"
           onClick={copyToClipboard}
-          className="h-8 w-8 p-0 bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700"
+          className="h-7 w-7 p-0 bg-[#1a1a1a] hover:bg-[#262626] border border-[#333]"
         >
           {copied ? (
-            <Check className="h-4 w-4 text-emerald-500" />
+            <Check className="h-3.5 w-3.5 text-[#50e3c2]" />
           ) : (
-            <Copy className="h-4 w-4 text-zinc-400" />
+            <Copy className="h-3.5 w-3.5 text-[#666]" />
           )}
         </Button>
       </div>
-      <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border-b border-zinc-800">
-        <div className="flex gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-red-500/80" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-          <div className="w-3 h-3 rounded-full bg-green-500/80" />
+      
+      {/* Header bar - Vercel style */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#262626]">
+        <div className="flex items-center gap-2">
+          <Triangle className="w-3 h-3 text-[#666] fill-[#666]" />
+          <span className="text-xs text-[#666] font-mono">{language}</span>
         </div>
-        <span className="text-xs text-zinc-500 font-mono ml-2">{language}</span>
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-[#333]" />
+          <div className="w-3 h-3 rounded-full bg-[#333]" />
+          <div className="w-3 h-3 rounded-full bg-[#333]" />
+        </div>
       </div>
-      <pre className="bg-zinc-950 p-4 overflow-x-auto text-sm leading-relaxed max-h-[350px] overflow-y-auto">
-        <code className="text-zinc-300 font-mono">
+      
+      {/* Code content */}
+      <pre className="p-4 overflow-x-auto text-sm leading-relaxed max-h-[320px] overflow-y-auto">
+        <code className="text-[#ededed] font-mono text-[13px]">
           {highlightCode(code, language)}
         </code>
       </pre>

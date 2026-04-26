@@ -261,7 +261,7 @@ function SlideContent({ slide }: { slide: Slide }) {
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white text-center mt-8">
           {slide.title}
           {slide.diagram === "presenter-hero" && (
-            <span className="blink-rect inline-block ml-2 align-baseline">▮</span>
+            <span className="blink-rect inline-block ml-2 align-baseline text-[#e8e05a]">▮</span>
           )}
         </h2>
         {slide.subtitle && (

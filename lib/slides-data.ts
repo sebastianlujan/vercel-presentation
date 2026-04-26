@@ -40,8 +40,8 @@ export const slides: Slide[] = [
   // PRESENTER
   {
     id: 0,
-    title: "Sebastian Lujan",
-    subtitle: "@delegate_call",
+    title: "@delegate_call",
+    subtitle: "Sebastian Lujan",
     content: [],
     diagram: "presenter-hero",
     section: "presenter",

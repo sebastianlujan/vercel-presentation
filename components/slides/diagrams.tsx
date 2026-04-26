@@ -29,8 +29,20 @@ import {
   BookOpen,
   CircleDot,
   GitBranch,
-  Triangle
 } from "lucide-react"
+
+// Vercel Triangle Logo - proper upward pointing triangle
+function VercelLogo({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg 
+      viewBox="0 0 76 65" 
+      fill="currentColor" 
+      className={className}
+    >
+      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
+    </svg>
+  )
+}
 
 type DiagramType = 
   | "intro-hero"
@@ -149,7 +161,7 @@ function StepOverviewDiagram() {
   return (
     <div className="flex flex-col items-center gap-6 p-6 w-full">
       <div className="flex items-center gap-2">
-        <Triangle className="w-4 h-4 text-white fill-white" />
+        <VercelLogo className="w-4 h-4 text-white" />
         <span className="text-xs font-medium text-[#555] uppercase tracking-wider">
           Build Pipeline
         </span>
@@ -314,7 +326,7 @@ function AISDKDiagram() {
       <div className="text-xs font-medium text-[#555] uppercase tracking-wider">Your Next.js App</div>
       
       <Card className="relative flex items-center justify-center w-full max-w-sm h-14">
-        <Triangle className="w-4 h-4 text-white fill-white mr-2" />
+        <VercelLogo className="w-4 h-4 text-white mr-2" />
         <span className="font-mono text-sm text-white">AI SDK v6</span>
         <Badge variant="default" className="absolute -bottom-2 left-1/2 -translate-x-1/2">
           TypeScript
@@ -508,7 +520,7 @@ function V0WorkflowDiagram() {
       </div>
       
       <Badge variant="default">
-        <Triangle className="w-3 h-3 mr-1 fill-current" />
+        <VercelLogo className="w-3 h-3 mr-1" />
         Prompt to Production
       </Badge>
     </div>
@@ -521,7 +533,7 @@ function ArchitectureDiagram() {
       {/* Frontend */}
       <Card className="w-full max-w-sm p-3 text-center">
         <div className="flex items-center justify-center gap-2">
-          <Triangle className="w-4 h-4 text-white fill-white" />
+          <VercelLogo className="w-4 h-4 text-white" />
           <span className="text-sm font-medium text-white">Next.js + AI SDK</span>
         </div>
         <span className="text-[10px] text-[#666]">Frontend + API Routes</span>

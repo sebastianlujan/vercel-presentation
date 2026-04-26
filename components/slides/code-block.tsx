@@ -1,7 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Copy, Triangle } from "lucide-react"
+import { Check, Copy } from "lucide-react"
+
+// Vercel Triangle Logo - proper upward pointing triangle
+function VercelLogo({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg 
+      viewBox="0 0 76 65" 
+      fill="currentColor" 
+      className={className}
+    >
+      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
+    </svg>
+  )
+}
 import { Button } from "@/components/ui/button"
 
 interface CodeBlockProps {
@@ -100,7 +113,7 @@ export function CodeBlock({ code, language = "typescript" }: CodeBlockProps) {
       {/* Header bar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#191919]">
         <div className="flex items-center gap-2">
-          <Triangle className="w-3 h-3 text-[#444] fill-[#444]" />
+          <VercelLogo className="w-3 h-3 text-[#444]" />
           <span className="text-xs text-[#555] font-mono">{language}</span>
         </div>
         <div className="flex gap-1.5">

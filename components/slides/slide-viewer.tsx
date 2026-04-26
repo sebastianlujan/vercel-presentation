@@ -1,7 +1,20 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, Triangle } from "lucide-react"
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react"
+
+// Vercel Triangle Logo - proper upward pointing triangle
+function VercelLogo({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg 
+      viewBox="0 0 76 65" 
+      fill="currentColor" 
+      className={className}
+    >
+      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
+    </svg>
+  )
+}
 import { Button } from "@/components/ui/button"
 import { slides, type Slide } from "@/lib/slides-data"
 import { CodeBlock } from "./code-block"
@@ -102,7 +115,7 @@ export function SlideViewer() {
         <div className="flex items-center gap-3">
           {/* Vercel Triangle Logo */}
           <div className="flex items-center justify-center w-8 h-8">
-            <Triangle className="w-5 h-5 text-white fill-white" />
+            <VercelLogo className="w-5 h-5 text-white" />
           </div>
           <div className="h-6 w-px bg-[#333]" />
           <div className="hidden sm:block">

@@ -16,9 +16,8 @@ const sections = [
   { id: "database", label: "Database" },
   { id: "storage", label: "Storage" },
   { id: "payments", label: "Payments" },
-  { id: "v0", label: "v0" },
+  { id: "tutorial", label: "Tutorial" },
   { id: "architecture", label: "Stack" },
-  { id: "hackathon", label: "Demo" },
   { id: "tips", label: "Tips" },
   { id: "resources", label: "Resources" },
 ]
@@ -218,12 +217,22 @@ export function SlideViewer() {
 function SlideContent({ slide }: { slide: Slide }) {
   const hasCode = slide.code
   const hasDiagram = slide.diagram
+  const isStepSlide = slide.step !== undefined
 
   return (
     <div className="space-y-6 md:space-y-8">
       {/* Title Section */}
       <div className="text-center space-y-3">
-        {slide.highlight && (
+        {/* Step indicator for tutorial slides */}
+        {isStepSlide && (
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white text-xs font-bold">
+              {slide.step}
+            </span>
+            <span className="text-sm font-medium text-blue-400">Step {slide.step} of 10</span>
+          </div>
+        )}
+        {slide.highlight && !isStepSlide && (
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
             {slide.highlight}
           </div>

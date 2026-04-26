@@ -8,7 +8,6 @@ import {
   Cloud, 
   Zap, 
   Globe, 
-  Server, 
   Layout, 
   Rocket, 
   Trophy, 
@@ -18,13 +17,22 @@ import {
   Image as ImageIcon,
   CheckCircle,
   ArrowRight,
+  ArrowDown,
   Sparkles,
   Shield,
   HardDrive,
   MessageSquare,
   Code,
   Eye,
-  Play
+  Play,
+  Settings,
+  Users,
+  TicketCheck,
+  Search,
+  BookOpen,
+  AlertTriangle,
+  CircleDot,
+  GitBranch
 } from "lucide-react"
 
 type DiagramType = 
@@ -38,6 +46,9 @@ type DiagramType =
   | "vercel-ecosystem"
   | "v0-workflow"
   | "blob-storage"
+  | "step-overview"
+  | "step-database-schema"
+  | "step-agent-flow"
 
 export function Diagram({ type }: { type: DiagramType }) {
   switch (type) {
@@ -61,9 +72,209 @@ export function Diagram({ type }: { type: DiagramType }) {
       return <V0WorkflowDiagram />
     case "blob-storage":
       return <BlobStorageDiagram />
+    case "step-overview":
+      return <StepOverviewDiagram />
+    case "step-database-schema":
+      return <StepDatabaseSchemaDiagram />
+    case "step-agent-flow":
+      return <StepAgentFlowDiagram />
     default:
       return null
   }
+}
+
+function StepOverviewDiagram() {
+  const steps = [
+    { num: 1, label: "Setup Project", icon: Code, color: "from-zinc-500 to-zinc-600" },
+    { num: 2, label: "Connect Supabase", icon: Database, color: "from-emerald-500 to-green-500" },
+    { num: 3, label: "Create Schema", icon: FileText, color: "from-blue-500 to-cyan-500" },
+    { num: 4, label: "Enable RLS", icon: Shield, color: "from-amber-500 to-orange-500" },
+    { num: 5, label: "Define Tools", icon: Wrench, color: "from-pink-500 to-rose-500" },
+    { num: 6, label: "Build Agent API", icon: Bot, color: "from-indigo-500 to-violet-500" },
+    { num: 7, label: "Create Chat UI", icon: MessageSquare, color: "from-cyan-500 to-blue-500" },
+  ]
+  
+  return (
+    <div className="flex flex-col items-center gap-4 p-4">
+      <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        Building a Customer Support Agent
+      </div>
+      
+      <div className="grid grid-cols-4 gap-3 w-full max-w-lg">
+        {steps.slice(0, 4).map((step, i) => (
+          <div key={i} className="flex flex-col items-center gap-2">
+            <div className={`relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} shadow-lg`}>
+              <step.icon className="w-5 h-5 text-white" />
+              <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-background border border-border flex items-center justify-center text-xs font-bold text-foreground">
+                {step.num}
+              </div>
+            </div>
+            <span className="text-xs text-center text-muted-foreground">{step.label}</span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="grid grid-cols-3 gap-3 w-full max-w-md">
+        {steps.slice(4).map((step, i) => (
+          <div key={i} className="flex flex-col items-center gap-2">
+            <div className={`relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} shadow-lg`}>
+              <step.icon className="w-5 h-5 text-white" />
+              <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-background border border-border flex items-center justify-center text-xs font-bold text-foreground">
+                {step.num}
+              </div>
+            </div>
+            <span className="text-xs text-center text-muted-foreground">{step.label}</span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 mt-2">
+        <Rocket className="w-4 h-4 text-emerald-400" />
+        <span className="text-xs text-emerald-400">From zero to deployed in one session</span>
+      </div>
+    </div>
+  )
+}
+
+function StepDatabaseSchemaDiagram() {
+  const tables = [
+    { 
+      name: "profiles", 
+      icon: Users, 
+      fields: ["id", "email", "full_name", "role"],
+      color: "border-blue-500/50"
+    },
+    { 
+      name: "tickets", 
+      icon: TicketCheck, 
+      fields: ["id", "user_id", "title", "status", "priority"],
+      color: "border-amber-500/50"
+    },
+    { 
+      name: "messages", 
+      icon: MessageSquare, 
+      fields: ["id", "ticket_id", "role", "content"],
+      color: "border-emerald-500/50"
+    },
+    { 
+      name: "knowledge_base", 
+      icon: BookOpen, 
+      fields: ["id", "title", "content", "embedding"],
+      color: "border-violet-500/50"
+    },
+  ]
+  
+  return (
+    <div className="flex flex-col items-center gap-4 p-4">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Settings className="w-4 h-4" />
+        <span>Click Settings &rarr; Add Integration &rarr; Supabase</span>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-3 w-full max-w-md">
+        {tables.map((table, i) => (
+          <div key={i} className={`flex flex-col gap-2 p-3 rounded-lg bg-muted/30 border ${table.color}`}>
+            <div className="flex items-center gap-2">
+              <table.icon className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-mono font-medium text-foreground">{table.name}</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {table.fields.map((field, j) => (
+                <span key={j} className="px-1.5 py-0.5 rounded bg-background/50 text-xs font-mono text-muted-foreground">
+                  {field}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Shield className="w-3.5 h-3.5 text-emerald-500" />
+          <span>Row Level Security</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <GitBranch className="w-3.5 h-3.5 text-blue-500" />
+          <span>Foreign Keys</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StepAgentFlowDiagram() {
+  return (
+    <div className="flex flex-col items-center gap-3 p-4">
+      <div className="w-full max-w-sm space-y-2">
+        {/* User Input */}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+          <Users className="w-5 h-5 text-blue-400 flex-shrink-0" />
+          <div className="flex-1">
+            <span className="text-sm font-medium text-foreground">User Message</span>
+            <p className="text-xs text-muted-foreground">&quot;How do I reset my password?&quot;</p>
+          </div>
+        </div>
+        
+        <div className="flex justify-center">
+          <ArrowDown className="w-4 h-4 text-muted-foreground" />
+        </div>
+        
+        {/* Agent Processing */}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/30">
+          <Bot className="w-5 h-5 text-indigo-400 flex-shrink-0" />
+          <div className="flex-1">
+            <span className="text-sm font-medium text-foreground">Agent Reasoning</span>
+            <p className="text-xs text-muted-foreground">Decides to search knowledge base</p>
+          </div>
+        </div>
+        
+        <div className="flex justify-center">
+          <ArrowDown className="w-4 h-4 text-muted-foreground" />
+        </div>
+        
+        {/* Tool Execution */}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+          <Search className="w-5 h-5 text-amber-400 flex-shrink-0" />
+          <div className="flex-1">
+            <span className="text-sm font-medium text-foreground">Tool: searchKnowledge</span>
+            <p className="text-xs text-muted-foreground">Query: &quot;password reset&quot;</p>
+          </div>
+        </div>
+        
+        <div className="flex justify-center">
+          <ArrowDown className="w-4 h-4 text-muted-foreground" />
+        </div>
+        
+        {/* Database Query */}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+          <Database className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+          <div className="flex-1">
+            <span className="text-sm font-medium text-foreground">Supabase Query</span>
+            <p className="text-xs text-muted-foreground">Returns 3 matching articles</p>
+          </div>
+        </div>
+        
+        <div className="flex justify-center">
+          <ArrowDown className="w-4 h-4 text-muted-foreground" />
+        </div>
+        
+        {/* Response */}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-pink-500/10 border border-pink-500/30">
+          <MessageSquare className="w-5 h-5 text-pink-400 flex-shrink-0" />
+          <div className="flex-1">
+            <span className="text-sm font-medium text-foreground">Streaming Response</span>
+            <p className="text-xs text-muted-foreground">Synthesized answer from results</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 text-xs text-muted-foreground">
+        <CircleDot className="w-3 h-3" />
+        <span>maxSteps: 5 for complex multi-tool queries</span>
+      </div>
+    </div>
+  )
 }
 
 function AgentDiagram() {
@@ -293,9 +504,6 @@ function V0WorkflowDiagram() {
               <step.icon className="w-6 h-6 text-white" />
             </div>
             <span className="text-xs font-medium text-foreground">{step.label}</span>
-            {i < 3 && (
-              <ArrowRight className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground hidden md:block" />
-            )}
           </div>
         ))}
       </div>

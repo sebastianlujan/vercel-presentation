@@ -33,7 +33,6 @@ export const slides: Slide[] = [
     subtitle: "Building Production-Ready AI Applications",
     content: [],
     diagram: "intro-hero",
-    highlight: "DevRel Workshop",
     section: "intro",
   },
   {

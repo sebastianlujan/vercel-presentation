@@ -166,48 +166,48 @@ function Badge({ children, variant = "default" }: { children: React.ReactNode; v
 }
 
 function StepOverviewDiagram() {
-  const steps = [
-    { num: 1, label: "Setup", icon: Code },
-    { num: 2, label: "Database", icon: Database },
-    { num: 3, label: "Schema", icon: FileText },
-    { num: 4, label: "RLS", icon: Shield },
-    { num: 5, label: "Tools", icon: Wrench },
-    { num: 6, label: "Agent", icon: Bot },
-    { num: 7, label: "UI", icon: MessageSquare },
-  ]
-  
   return (
     <div className="flex flex-col items-center gap-6 p-6 w-full">
       <div className="flex items-center gap-2">
         <VercelLogo className="w-4 h-4 text-white" />
         <span className="text-xs font-medium text-[#555] uppercase tracking-wider">
-          Build Pipeline
+          Live Demo
         </span>
       </div>
       
-      <div className="flex items-center gap-2 w-full max-w-lg justify-center flex-wrap">
-        {steps.map((step, i) => (
-          <div key={i} className="flex items-center">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative flex items-center justify-center w-12 h-12 rounded-lg bg-[#0a0a0a] border border-[#222] hover:border-[#444] transition-colors">
-                <step.icon className="w-5 h-5 text-white" />
-                <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-white text-black flex items-center justify-center text-[10px] font-bold">
-                  {step.num}
-                </div>
-              </div>
-              <span className="text-[10px] text-[#555]">{step.label}</span>
-            </div>
-            {i < steps.length - 1 && (
-              <div className="w-4 h-px bg-[#222] mx-1 mt-[-16px]" />
-            )}
+      {/* Demo preview */}
+      <div className="w-full max-w-md p-4 rounded-xl bg-[#0a0a0a] border border-[#222]">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-lg bg-[#111] border border-[#222] flex items-center justify-center">
+            <Bot className="w-5 h-5 text-white" />
           </div>
-        ))}
+          <div>
+            <div className="text-sm font-medium text-white">Support Agent</div>
+            <div className="text-xs text-[#555]">AI SDK v6 + Tool Calling</div>
+          </div>
+        </div>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2 text-xs text-[#666]">
+            <Wrench className="w-3 h-3" />
+            <span>searchKnowledge, getTicketHistory, createTicket</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-[#666]">
+            <Database className="w-3 h-3" />
+            <span>Mock data (no Supabase required for demo)</span>
+          </div>
+        </div>
+        <a
+          href="/demo"
+          className="flex items-center justify-center gap-2 w-full py-3 bg-white text-black rounded-lg font-medium text-sm hover:bg-[#eee] transition-colors"
+        >
+          <Rocket className="w-4 h-4" />
+          Try the Demo
+        </a>
       </div>
       
-      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-[#222]">
-        <Rocket className="w-4 h-4 text-white" />
-        <span className="text-xs text-[#666]">Zero to deployed in one session</span>
-      </div>
+      <p className="text-xs text-[#444] text-center max-w-sm">
+        Experience a working AI agent with tool calling, streaming responses, and multi-step reasoning
+      </p>
     </div>
   )
 }

@@ -95,22 +95,34 @@ export function Diagram({ type }: { type: DiagramType }) {
   }
 }
 
-// Vercel Intro Hero - clean triangle
-function IntroHeroDiagram() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-10 p-8 w-full min-h-[350px]">
-      {/* Main Triangle - Vercel logo */}
-      <div className="float-animation triangle-glow">
+// Vercel Intro Hero - 3D triangle
+import dynamic from "next/dynamic"
+
+const VercelTriangle3D = dynamic(
+  () => import("./vercel-triangle-3d").then((mod) => mod.VercelTriangle3D),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-[280px] h-[280px] flex items-center justify-center">
         <svg 
           width="120" 
           height="104" 
           viewBox="0 0 76 65" 
           fill="none" 
-          xmlns="http://www.w3.org/2000/svg"
+          className="opacity-50"
         >
           <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
         </svg>
       </div>
+    )
+  }
+)
+
+function IntroHeroDiagram() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-6 w-full min-h-[400px]">
+      {/* 3D Triangle */}
+      <VercelTriangle3D />
       
       {/* Key features */}
       <div className="flex items-center gap-8">

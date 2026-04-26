@@ -196,13 +196,16 @@ function StepOverviewDiagram() {
             <span>Mock data (no Supabase required for demo)</span>
           </div>
         </div>
-        <a
-          href="/demo"
-          className="flex items-center justify-center gap-2 w-full py-3 bg-white text-black rounded-lg font-medium text-sm hover:bg-[#eee] transition-colors"
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            window.open("/demo", "_blank")
+          }}
+          className="flex items-center justify-center gap-2 w-full py-3 bg-white text-black rounded-lg font-medium text-sm hover:bg-[#eee] transition-colors cursor-pointer"
         >
           <Rocket className="w-4 h-4" />
           Try the Demo
-        </a>
+        </button>
       </div>
       
       <p className="text-xs text-[#444] text-center max-w-sm">

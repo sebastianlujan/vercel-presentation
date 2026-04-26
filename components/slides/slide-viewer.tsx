@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react"
 
 // Vercel Triangle Logo - proper upward pointing triangle
@@ -22,6 +22,7 @@ import { Diagram } from "./diagrams"
 
 const sections = [
   { id: "intro", label: "Intro" },
+  { id: "presenter", label: "Me" },
   { id: "agents", label: "Agents" },
   { id: "ai-sdk", label: "AI SDK" },
   { id: "ai-gateway", label: "Gateway" },
@@ -39,22 +40,46 @@ export function SlideViewer() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const animTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Navigation NEVER blocks on isAnimating - the flag only drives the
+  // fade-in CSS class. Clearing the previous timer prevents a stuck flag
+  // when clicks arrive faster than the 300ms transition.
   const goToSlide = useCallback((index: number) => {
-    if (index >= 0 && index < slides.length && !isAnimating) {
-      setIsAnimating(true)
-      setCurrentSlide(index)
-      setTimeout(() => setIsAnimating(false), 300)
-    }
-  }, [isAnimating])
+    if (index < 0 || index >= slides.length) return
+    setCurrentSlide(index)
+    setIsAnimating(true)
+    if (animTimerRef.current) clearTimeout(animTimerRef.current)
+    animTimerRef.current = setTimeout(() => setIsAnimating(false), 300)
+  }, [])
+
+  useEffect(() => () => {
+    if (animTimerRef.current) clearTimeout(animTimerRef.current)
+  }, [])
 
   const nextSlide = useCallback(() => {
-    goToSlide(currentSlide + 1)
-  }, [currentSlide, goToSlide])
+    setCurrentSlide(i => {
+      const next = Math.min(i + 1, slides.length - 1)
+      if (next !== i) {
+        setIsAnimating(true)
+        if (animTimerRef.current) clearTimeout(animTimerRef.current)
+        animTimerRef.current = setTimeout(() => setIsAnimating(false), 300)
+      }
+      return next
+    })
+  }, [])
 
   const prevSlide = useCallback(() => {
-    goToSlide(currentSlide - 1)
-  }, [currentSlide, goToSlide])
+    setCurrentSlide(i => {
+      const prev = Math.max(i - 1, 0)
+      if (prev !== i) {
+        setIsAnimating(true)
+        if (animTimerRef.current) clearTimeout(animTimerRef.current)
+        animTimerRef.current = setTimeout(() => setIsAnimating(false), 300)
+      }
+      return prev
+    })
+  }, [])
 
   const goToSection = useCallback((sectionId: string) => {
     const slideIndex = slides.findIndex(s => s.section === sectionId)
@@ -65,10 +90,12 @@ export function SlideViewer() {
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen()
+      // Fullscreen API rejects when the page is in a sandboxed iframe
+      // (e.g. v0.dev preview pane); swallow so it doesn't poison state.
+      document.documentElement.requestFullscreen().catch(() => {})
       setIsFullscreen(true)
     } else {
-      document.exitFullscreen()
+      document.exitFullscreen().catch(() => {})
       setIsFullscreen(false)
     }
   }, [])
@@ -224,8 +251,8 @@ function SlideContent({ slide }: { slide: Slide }) {
   const hasCode = slide.code
   const hasDiagram = slide.diagram
   const isStepSlide = slide.step !== undefined
-  const isIntroHero = slide.diagram === "intro-hero"
-  
+  const isIntroHero = slide.diagram === "intro-hero" || slide.diagram === "presenter-hero"
+
   // Special full-width layout for intro hero - SF minimalism
   if (isIntroHero) {
     return (
@@ -233,32 +260,37 @@ function SlideContent({ slide }: { slide: Slide }) {
         <Diagram type={slide.diagram!} />
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white text-center mt-8">
           {slide.title}
+          {slide.diagram === "presenter-hero" && (
+            <span className="blink-rect inline-block ml-2 align-baseline">▮</span>
+          )}
         </h2>
         {slide.subtitle && (
           <p className="text-base md:text-lg text-[#555] max-w-md mx-auto text-center mt-3 font-light">{slide.subtitle}</p>
         )}
-        {/* Buidlers logo - pixel perfect with blinking rectangle overlay */}
-        <div className="mt-12 flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
-          <span className="text-xs text-[#444] uppercase tracking-widest">presented by</span>
-          <div className="relative">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%2014%20%283%29-akqGQf5UVVZsD0scganOQv3TCYZZzk.png"
-              alt="buidlers"
-              className="h-6"
-              style={{ filter: "brightness(0.95)" }}
-            />
-            {/* Blinking rectangle overlay - positioned exactly over the static rectangle */}
-            <span
-              className="absolute blink-rect bg-[#e8e05a]"
-              style={{
-                right: "0px",
-                top: "0px",
-                width: "12%",
-                height: "100%",
-              }}
-            />
+        {/* Buidlers logo - only on the AI Stack intro slide, not on the presenter slide */}
+        {slide.diagram === "intro-hero" && (
+          <div className="mt-12 flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
+            <span className="text-xs text-[#444] uppercase tracking-widest">presented by</span>
+            <div className="relative">
+              <img
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%2014%20%283%29-akqGQf5UVVZsD0scganOQv3TCYZZzk.png"
+                alt="buidlers"
+                className="h-6"
+                style={{ filter: "brightness(0.95)" }}
+              />
+              {/* Blinking rectangle overlay - positioned exactly over the static rectangle */}
+              <span
+                className="absolute blink-rect bg-[#e8e05a]"
+                style={{
+                  right: "0px",
+                  top: "0px",
+                  width: "12%",
+                  height: "100%",
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     )
   }

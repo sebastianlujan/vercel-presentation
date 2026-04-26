@@ -44,9 +44,10 @@ function VercelLogo({ className = "w-4 h-4" }: { className?: string }) {
   )
 }
 
-type DiagramType = 
+type DiagramType =
   | "intro-hero"
-  | "agent" 
+  | "presenter-hero"
+  | "agent"
   | "ai-sdk" 
   | "ai-gateway" 
   | "architecture" 
@@ -64,6 +65,8 @@ export function Diagram({ type }: { type: DiagramType }) {
   switch (type) {
     case "intro-hero":
       return <IntroHeroDiagram />
+    case "presenter-hero":
+      return <PresenterHeroDiagram />
     case "agent":
       return <AgentDiagram />
     case "ai-sdk":
@@ -134,6 +137,103 @@ function IntroHeroDiagram() {
         </svg>
       </div>
       
+      {/* Subtle horizontal line */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+    </div>
+  )
+}
+
+// Presenter Hero - same triangle layout as intro, but image clipped inside the triangle
+function PresenterHeroDiagram() {
+  return (
+    <div className="relative flex items-center justify-center w-full min-h-[420px] overflow-hidden">
+      {/* Fog gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80" />
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="particle absolute w-[2px] h-[2px] bg-white/20 rounded-full"
+            style={{
+              left: `${5 + (i * 4.5)}%`,
+              animationDelay: `${i * 0.3}s`,
+              animationDuration: `${8 + (i % 5) * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Subtle radial glow behind triangle */}
+      <div className="absolute w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-3xl" />
+
+      {/* Triangle with image clipped inside */}
+      <div className="relative z-10 float-animation">
+        <svg
+          width="240"
+          height="208"
+          viewBox="0 0 76 65"
+          className="triangle-glow"
+        >
+          <defs>
+            <clipPath id="presenterTriangleClip">
+              <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
+            </clipPath>
+            {/*
+              Polygon in the MIRROR group's local coordinates.
+              After the group's translate(75.0548)+scale(-1) it visually
+              clips to the left-shoulder wedge of the triangle - well
+              below the face. Adjust y down (e.g. 56) if the seam still
+              touches your face, or up (e.g. 46) if you want more shoulder.
+            */}
+            <clipPath id="presenterLeftShoulder">
+              <polygon points="37.5274,52 75.0548,65 37.5274,65 66.394,52" />
+            </clipPath>
+            <filter id="presenterBW">
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+          </defs>
+          {/* White triangle fallback */}
+          <path
+            d="M37.5274 0L75.0548 65H0L37.5274 0Z"
+            fill="white"
+          />
+          {/* Original image, full triangle - face stays untouched on both sides */}
+          <image
+            href="/0.jpeg"
+            x="0"
+            y="0"
+            width="76"
+            height="65"
+            preserveAspectRatio="xMidYMid slice"
+            clipPath="url(#presenterTriangleClip)"
+            filter="url(#presenterBW)"
+          />
+          {/* Mirror only the right shoulder onto the left shoulder area */}
+          <g transform="translate(75.0548, 0) scale(-1, 1)">
+            <image
+              href="/0.jpeg"
+              x="0"
+              y="0"
+              width="76"
+              height="65"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#presenterLeftShoulder)"
+              filter="url(#presenterBW)"
+            />
+          </g>
+          {/* Triangle outline */}
+          <path
+            d="M37.5274 0L75.0548 65H0L37.5274 0Z"
+            fill="none"
+            stroke="white"
+            strokeWidth="0.4"
+          />
+        </svg>
+      </div>
+
       {/* Subtle horizontal line */}
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
     </div>

@@ -5,9 +5,10 @@ export interface Slide {
   content: string[]
   code?: string
   codeLanguage?: string
-  diagram?: 
+  diagram?:
     | "intro-hero"
-    | "agent" 
+    | "presenter-hero"
+    | "agent"
     | "ai-sdk" 
     | "ai-gateway" 
     | "architecture" 
@@ -34,6 +35,16 @@ export const slides: Slide[] = [
     content: [],
     diagram: "intro-hero",
     section: "intro",
+  },
+
+  // PRESENTER
+  {
+    id: 0,
+    title: "Sebastian Lujan",
+    subtitle: "@delegate_call",
+    content: [],
+    diagram: "presenter-hero",
+    section: "presenter",
   },
   {
     id: 2,

@@ -237,6 +237,28 @@ function SlideContent({ slide }: { slide: Slide }) {
         {slide.subtitle && (
           <p className="text-base md:text-lg text-[#555] max-w-md mx-auto text-center mt-3 font-light">{slide.subtitle}</p>
         )}
+        {/* Buidlers logo - pixel perfect with blinking rectangle overlay */}
+        <div className="mt-12 flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
+          <span className="text-xs text-[#444] uppercase tracking-widest">presented by</span>
+          <div className="relative">
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%2014%20%283%29-akqGQf5UVVZsD0scganOQv3TCYZZzk.png"
+              alt="buidlers"
+              className="h-6"
+              style={{ filter: "brightness(0.95)" }}
+            />
+            {/* Blinking rectangle overlay - positioned exactly over the static rectangle */}
+            <span
+              className="absolute blink-rect bg-[#e8e05a]"
+              style={{
+                right: "0px",
+                top: "0px",
+                width: "12%",
+                height: "100%",
+              }}
+            />
+          </div>
+        </div>
       </div>
     )
   }

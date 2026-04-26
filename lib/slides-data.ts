@@ -437,15 +437,15 @@ const createCheckout = tool({
   {
     id: 16,
     title: "Building a Data-Driven Agent",
-    subtitle: "Step-by-Step Tutorial",
+    subtitle: "Live Demo: /demo",
     content: [
-      "We will build a Customer Support Agent",
-      "Real database for tickets, users, and knowledge base",
-      "MCP integration with Linear for issue tracking",
-      "Complete with authentication and streaming UI",
+      "Customer Support Agent with tool calling",
+      "Knowledge base search + ticket management",
+      "Real-time streaming responses",
+      "Try it now: click the link below",
     ],
     diagram: "step-overview",
-    highlight: "7 Steps to Production",
+    highlight: "Live Demo",
     section: "tutorial",
   },
   

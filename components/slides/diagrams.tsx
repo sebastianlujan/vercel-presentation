@@ -103,13 +103,13 @@ const VercelTriangle3D = dynamic(
   { 
     ssr: false,
     loading: () => (
-      <div className="w-[280px] h-[280px] flex items-center justify-center">
+      <div className="w-[320px] h-[320px] flex items-center justify-center">
         <svg 
-          width="120" 
-          height="104" 
+          width="100" 
+          height="87" 
           viewBox="0 0 76 65" 
           fill="none" 
-          className="opacity-50"
+          className="opacity-30 animate-pulse"
         >
           <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
         </svg>
@@ -120,16 +120,8 @@ const VercelTriangle3D = dynamic(
 
 function IntroHeroDiagram() {
   return (
-    <div className="flex flex-col items-center justify-center gap-6 w-full min-h-[400px]">
-      {/* 3D Triangle */}
+    <div className="flex items-center justify-center w-full min-h-[380px]">
       <VercelTriangle3D />
-      
-      {/* Key features */}
-      <div className="flex items-center gap-8">
-        {["AI SDK", "AI Gateway", "MCP", "v0"].map((label, i) => (
-          <span key={i} className="text-xs text-[#666] font-medium tracking-wide">{label}</span>
-        ))}
-      </div>
     </div>
   )
 }

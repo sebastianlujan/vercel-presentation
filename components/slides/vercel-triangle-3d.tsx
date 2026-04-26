@@ -2,107 +2,142 @@
 
 import { useRef, useMemo } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Float, MeshTransmissionMaterial, Environment } from "@react-three/drei"
+import { Float } from "@react-three/drei"
 import * as THREE from "three"
 
+// Floating particles in the fog
+function Particles({ count = 50 }) {
+  const mesh = useRef<THREE.Points>(null)
+  
+  const [positions, sizes] = useMemo(() => {
+    const positions = new Float32Array(count * 3)
+    const sizes = new Float32Array(count)
+    
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 8
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 8
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 4 - 2
+      sizes[i] = Math.random() * 2 + 0.5
+    }
+    
+    return [positions, sizes]
+  }, [count])
+  
+  useFrame((state) => {
+    if (mesh.current) {
+      const positions = mesh.current.geometry.attributes.position.array as Float32Array
+      for (let i = 0; i < count; i++) {
+        // Slow upward drift
+        positions[i * 3 + 1] += 0.002
+        // Reset particles that drift too high
+        if (positions[i * 3 + 1] > 4) {
+          positions[i * 3 + 1] = -4
+        }
+        // Subtle horizontal sway
+        positions[i * 3] += Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.001
+      }
+      mesh.current.geometry.attributes.position.needsUpdate = true
+    }
+  })
+  
+  return (
+    <points ref={mesh}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-size"
+          count={count}
+          array={sizes}
+          itemSize={1}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.015}
+        color="#ffffff"
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+        depthWrite={false}
+      />
+    </points>
+  )
+}
+
+// Solid white Vercel triangle
 function Triangle() {
   const meshRef = useRef<THREE.Mesh>(null)
   
-  // Create triangle geometry
   const geometry = useMemo(() => {
     const shape = new THREE.Shape()
-    const size = 1.5
+    const size = 1.8
     const height = size * Math.sqrt(3) / 2
     
-    // Vercel triangle pointing up
     shape.moveTo(0, height * 0.6)
     shape.lineTo(size / 2, -height * 0.4)
     shape.lineTo(-size / 2, -height * 0.4)
     shape.closePath()
     
     const extrudeSettings = {
-      depth: 0.15,
+      depth: 0.08,
       bevelEnabled: true,
-      bevelThickness: 0.03,
-      bevelSize: 0.02,
-      bevelSegments: 3,
+      bevelThickness: 0.01,
+      bevelSize: 0.01,
+      bevelSegments: 2,
     }
     
     return new THREE.ExtrudeGeometry(shape, extrudeSettings)
   }, [])
   
-  // Subtle rotation animation
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.15
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.05
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.08
     }
   })
   
   return (
     <Float
-      speed={2}
-      rotationIntensity={0.2}
-      floatIntensity={0.5}
-      floatingRange={[-0.1, 0.1]}
+      speed={1.5}
+      rotationIntensity={0.1}
+      floatIntensity={0.3}
+      floatingRange={[-0.05, 0.05]}
     >
-      <mesh ref={meshRef} geometry={geometry} position={[0, 0, 0]}>
-        <MeshTransmissionMaterial
-          backside
-          samples={16}
-          resolution={512}
-          transmission={0.95}
-          roughness={0.05}
-          thickness={0.5}
-          ior={1.5}
-          chromaticAberration={0.06}
-          anisotropy={0.3}
-          distortion={0.1}
-          distortionScale={0.2}
-          temporalDistortion={0.1}
-          clearcoat={1}
-          attenuationDistance={0.5}
-          attenuationColor="#ffffff"
+      <mesh ref={meshRef} geometry={geometry}>
+        <meshStandardMaterial
           color="#ffffff"
+          emissive="#ffffff"
+          emissiveIntensity={0.1}
+          roughness={0.1}
+          metalness={0.1}
         />
-      </mesh>
-      
-      {/* Inner glow mesh */}
-      <mesh geometry={geometry} position={[0, 0, -0.01]} scale={0.98}>
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
       </mesh>
     </Float>
   )
 }
 
-function Lights() {
-  return (
-    <>
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[5, 5, 5]} intensity={1} color="#ffffff" />
-      <directionalLight position={[-5, 5, -5]} intensity={0.5} color="#ffffff" />
-      <pointLight position={[0, 0, 3]} intensity={0.5} color="#ffffff" />
-    </>
-  )
-}
-
 export function VercelTriangle3D() {
   return (
-    <div className="w-[280px] h-[280px] relative">
+    <div className="w-[320px] h-[320px] relative">
       <Canvas
-        camera={{ position: [0, 0, 3.5], fov: 45 }}
+        camera={{ position: [0, 0, 4], fov: 40 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
       >
-        <Lights />
+        {/* Minimal lighting */}
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[0, 5, 5]} intensity={0.8} />
+        
+        {/* Fog */}
+        <fog attach="fog" args={["#000000", 3, 10]} />
+        
+        {/* Scene */}
+        <Particles count={60} />
         <Triangle />
-        <Environment preset="city" />
       </Canvas>
-      
-      {/* Subtle glow effect behind */}
-      <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
-        <div className="w-32 h-32 bg-white/10 rounded-full blur-3xl" />
-      </div>
     </div>
   )
 }

@@ -25,7 +25,7 @@ function highlightCode(code: string, language: string): React.ReactNode {
     if (line.trim().startsWith("//") || line.trim().startsWith("#") || line.trim().startsWith("--")) {
       return (
         <span key={lineIndex}>
-          <span className="text-[#525252]">{line}</span>
+          <span className="text-[#444]">{line}</span>
           {lineIndex < code.split("\n").length - 1 && "\n"}
         </span>
       )
@@ -80,39 +80,39 @@ export function CodeBlock({ code, language = "typescript" }: CodeBlockProps) {
   }
 
   return (
-    <div className="relative group rounded-lg overflow-hidden border border-[#262626] bg-[#0a0a0a]">
+    <div className="relative group rounded-lg overflow-hidden border border-[#191919] bg-black">
       {/* Copy button */}
       <div className="absolute right-3 top-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
           size="sm"
           onClick={copyToClipboard}
-          className="h-7 w-7 p-0 bg-[#1a1a1a] hover:bg-[#262626] border border-[#333]"
+          className="h-7 w-7 p-0 bg-[#111] hover:bg-[#191919] border border-[#222]"
         >
           {copied ? (
-            <Check className="h-3.5 w-3.5 text-[#50e3c2]" />
+            <Check className="h-3.5 w-3.5 text-white" />
           ) : (
-            <Copy className="h-3.5 w-3.5 text-[#666]" />
+            <Copy className="h-3.5 w-3.5 text-[#555]" />
           )}
         </Button>
       </div>
       
-      {/* Header bar - Vercel style */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#262626]">
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#191919]">
         <div className="flex items-center gap-2">
-          <Triangle className="w-3 h-3 text-[#666] fill-[#666]" />
-          <span className="text-xs text-[#666] font-mono">{language}</span>
+          <Triangle className="w-3 h-3 text-[#444] fill-[#444]" />
+          <span className="text-xs text-[#555] font-mono">{language}</span>
         </div>
         <div className="flex gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-[#333]" />
-          <div className="w-3 h-3 rounded-full bg-[#333]" />
-          <div className="w-3 h-3 rounded-full bg-[#333]" />
+          <div className="w-3 h-3 rounded-full bg-[#222]" />
+          <div className="w-3 h-3 rounded-full bg-[#222]" />
+          <div className="w-3 h-3 rounded-full bg-[#222]" />
         </div>
       </div>
       
       {/* Code content */}
       <pre className="p-4 overflow-x-auto text-sm leading-relaxed max-h-[320px] overflow-y-auto">
-        <code className="text-[#ededed] font-mono text-[13px]">
+        <code className="text-[#ccc] font-mono text-[13px]">
           {highlightCode(code, language)}
         </code>
       </pre>

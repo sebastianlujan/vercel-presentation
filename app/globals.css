@@ -4,40 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Vercel-inspired dark theme */
+  /* Pure black theme */
   --background: #000000;
-  --foreground: #ededed;
-  --card: #0a0a0a;
-  --card-foreground: #ededed;
-  --popover: #0a0a0a;
-  --popover-foreground: #ededed;
+  --foreground: #fafafa;
+  --card: #000000;
+  --card-foreground: #fafafa;
+  --popover: #000000;
+  --popover-foreground: #fafafa;
   --primary: #ffffff;
   --primary-foreground: #000000;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ededed;
-  --muted: #171717;
-  --muted-foreground: #a1a1a1;
-  --accent: #1a1a1a;
-  --accent-foreground: #ededed;
+  --secondary: #111111;
+  --secondary-foreground: #fafafa;
+  --muted: #0a0a0a;
+  --muted-foreground: #888888;
+  --accent: #111111;
+  --accent-foreground: #fafafa;
   --destructive: #ff4444;
   --destructive-foreground: #ffffff;
-  --border: #262626;
-  --input: #171717;
-  --ring: #404040;
+  --border: #222222;
+  --input: #0a0a0a;
+  --ring: #333333;
   --chart-1: #0070f3;
   --chart-2: #00d4aa;
   --chart-3: #7928ca;
   --chart-4: #ff0080;
   --chart-5: #f5a623;
   --radius: 0.5rem;
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: #ededed;
+  --sidebar: #000000;
+  --sidebar-foreground: #fafafa;
   --sidebar-primary: #ffffff;
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: #ededed;
-  --sidebar-border: #262626;
-  --sidebar-ring: #404040;
+  --sidebar-accent: #111111;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #222222;
+  --sidebar-ring: #333333;
   
   /* Vercel brand colors */
   --vercel-blue: #0070f3;
@@ -119,12 +119,12 @@
   background-clip: text;
 }
 
-/* Vercel-style grid background */
+/* Minimal grid background */
 .grid-bg {
-  background-size: 40px 40px;
+  background-size: 60px 60px;
   background-image:
-    linear-gradient(to right, #171717 1px, transparent 1px),
-    linear-gradient(to bottom, #171717 1px, transparent 1px);
+    linear-gradient(to right, #111 1px, transparent 1px),
+    linear-gradient(to bottom, #111 1px, transparent 1px);
 }
 
 /* Vercel-style glow effects */

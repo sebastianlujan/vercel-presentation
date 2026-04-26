@@ -95,14 +95,10 @@ export function SlideViewer() {
   return (
     <div className="min-h-screen bg-black flex flex-col relative overflow-hidden">
       {/* Subtle grid background */}
-      <div className="absolute inset-0 grid-bg opacity-50" />
-      
-      {/* Gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#0070f3] rounded-full blur-[150px] opacity-[0.07]" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#7928ca] rounded-full blur-[150px] opacity-[0.07]" />
+      <div className="absolute inset-0 grid-bg opacity-30" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-4 md:px-6 py-4 border-b border-[#262626]">
+      <header className="relative z-10 flex items-center justify-between px-4 md:px-6 py-4 border-b border-[#191919]">
         <div className="flex items-center gap-3">
           {/* Vercel Triangle Logo */}
           <div className="flex items-center justify-center w-8 h-8">
@@ -115,7 +111,7 @@ export function SlideViewer() {
         </div>
 
         {/* Section Navigation - Vercel style pill buttons */}
-        <div className="hidden lg:flex items-center gap-1 px-1 py-1 bg-[#0a0a0a] rounded-full border border-[#262626]">
+        <div className="hidden lg:flex items-center gap-1 px-1 py-1 bg-black rounded-full border border-[#191919]">
           {sections.filter(s => slides.some(sl => sl.section === s.id)).map((section) => (
             <button
               key={section.id}
@@ -123,7 +119,7 @@ export function SlideViewer() {
               className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
                 currentSection === section.id
                   ? "bg-white text-black font-medium"
-                  : "text-[#888] hover:text-white"
+                  : "text-[#666] hover:text-white"
               }`}
             >
               {section.label}
@@ -164,12 +160,12 @@ export function SlideViewer() {
       </main>
 
       {/* Navigation - Vercel style */}
-      <footer className="relative z-10 flex items-center justify-between px-4 md:px-6 py-4 border-t border-[#262626]">
+      <footer className="relative z-10 flex items-center justify-between px-4 md:px-6 py-4 border-t border-[#191919]">
         <Button
           variant="ghost"
           onClick={prevSlide}
           disabled={currentSlide === 0}
-          className="gap-2 text-[#888] hover:text-white hover:bg-[#1a1a1a] disabled:opacity-30"
+          className="gap-2 text-[#666] hover:text-white hover:bg-[#111] disabled:opacity-30"
         >
           <ChevronLeft className="w-4 h-4" />
           <span className="hidden sm:inline text-sm">Previous</span>
@@ -177,7 +173,7 @@ export function SlideViewer() {
 
         {/* Progress Bar - Vercel style */}
         <div className="flex-1 mx-4 md:mx-12 max-w-xl">
-          <div className="relative h-0.5 bg-[#262626] rounded-full overflow-hidden">
+          <div className="relative h-0.5 bg-[#191919] rounded-full overflow-hidden">
             <div 
               className="absolute inset-y-0 left-0 bg-white rounded-full transition-all duration-300 ease-out"
               style={{ width: `${((currentSlide + 1) / slides.length) * 100}%` }}
@@ -189,7 +185,7 @@ export function SlideViewer() {
           variant="ghost"
           onClick={nextSlide}
           disabled={currentSlide === slides.length - 1}
-          className="gap-2 text-[#888] hover:text-white hover:bg-[#1a1a1a] disabled:opacity-30"
+          className="gap-2 text-[#666] hover:text-white hover:bg-[#111] disabled:opacity-30"
         >
           <span className="hidden sm:inline text-sm">Next</span>
           <ChevronRight className="w-4 h-4" />
@@ -197,13 +193,13 @@ export function SlideViewer() {
       </footer>
 
       {/* Keyboard Hints - minimal */}
-      <div className="absolute bottom-20 right-6 hidden lg:flex items-center gap-3 text-xs text-[#444]">
+      <div className="absolute bottom-20 right-6 hidden lg:flex items-center gap-3 text-xs text-[#333]">
         <div className="flex items-center gap-1.5">
-          <kbd className="px-1.5 py-0.5 rounded bg-[#1a1a1a] border border-[#333] font-mono text-[10px]">Space</kbd>
+          <kbd className="px-1.5 py-0.5 rounded bg-[#0a0a0a] border border-[#222] font-mono text-[10px]">Space</kbd>
           <span>next</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <kbd className="px-1.5 py-0.5 rounded bg-[#1a1a1a] border border-[#333] font-mono text-[10px]">F</kbd>
+          <kbd className="px-1.5 py-0.5 rounded bg-[#0a0a0a] border border-[#222] font-mono text-[10px]">F</kbd>
           <span>fullscreen</span>
         </div>
       </div>
@@ -222,15 +218,15 @@ function SlideContent({ slide }: { slide: Slide }) {
       <div className="text-center space-y-4">
         {/* Step indicator for tutorial slides - Vercel style */}
         {isStepSlide && (
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0a0a0a] border border-[#262626]">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-[#222]">
             <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white text-black text-xs font-bold">
               {slide.step}
             </div>
-            <span className="text-sm text-[#888]">Step {slide.step} of 10</span>
+            <span className="text-sm text-[#666]">Step {slide.step} of 10</span>
           </div>
         )}
         {slide.highlight && !isStepSlide && (
-          <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#0070f3]/10 text-[#0070f3] text-sm font-medium border border-[#0070f3]/20">
+          <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/5 text-white/80 text-sm font-medium border border-white/10">
             {slide.highlight}
           </div>
         )}
@@ -249,12 +245,12 @@ function SlideContent({ slide }: { slide: Slide }) {
           {slide.content.map((item, index) => (
             <div
               key={index}
-              className="flex items-start gap-4 p-4 rounded-lg bg-[#0a0a0a] border border-[#262626] border-glow transition-all"
+              className="flex items-start gap-4 p-4 rounded-lg bg-black border border-[#191919] hover:border-[#333] transition-all"
             >
               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white text-black text-xs font-bold flex-shrink-0 mt-0.5">
                 {index + 1}
               </div>
-              <p className="text-[15px] text-[#ededed] leading-relaxed">{item}</p>
+              <p className="text-[15px] text-[#ccc] leading-relaxed">{item}</p>
             </div>
           ))}
         </div>
@@ -267,7 +263,7 @@ function SlideContent({ slide }: { slide: Slide }) {
         )}
         
         {hasDiagram && (
-          <div className="flex items-center justify-center bg-[#0a0a0a] rounded-xl border border-[#262626] min-h-[300px]">
+          <div className="flex items-center justify-center bg-black rounded-xl border border-[#191919] min-h-[300px]">
             <Diagram type={slide.diagram!} />
           </div>
         )}

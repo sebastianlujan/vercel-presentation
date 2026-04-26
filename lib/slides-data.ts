@@ -6,6 +6,7 @@ export interface Slide {
   code?: string
   codeLanguage?: string
   diagram?: 
+    | "intro-hero"
     | "agent" 
     | "ai-sdk" 
     | "ai-gateway" 
@@ -30,11 +31,8 @@ export const slides: Slide[] = [
     id: 1,
     title: "The Vercel AI Stack",
     subtitle: "Building Production-Ready AI Applications",
-    content: [
-      "From v0 prototypes to deployed AI agents",
-      "Database, payments, storage, and AI - unified",
-      "Everything you need to win your next hackathon",
-    ],
+    content: [],
+    diagram: "intro-hero",
     highlight: "DevRel Workshop",
     section: "intro",
   },

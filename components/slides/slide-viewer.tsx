@@ -211,6 +211,27 @@ function SlideContent({ slide }: { slide: Slide }) {
   const hasCode = slide.code
   const hasDiagram = slide.diagram
   const isStepSlide = slide.step !== undefined
+  const isIntroHero = slide.diagram === "intro-hero"
+  
+  // Special full-width layout for intro hero
+  if (isIntroHero) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        {slide.highlight && (
+          <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/5 text-white/80 text-sm font-medium border border-white/10 mb-6">
+            {slide.highlight}
+          </div>
+        )}
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance text-white text-center mb-2">
+          {slide.title}
+        </h2>
+        {slide.subtitle && (
+          <p className="text-lg md:text-xl text-[#666] max-w-xl mx-auto text-center mb-8">{slide.subtitle}</p>
+        )}
+        <Diagram type={slide.diagram!} />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8 md:space-y-10">
@@ -241,19 +262,21 @@ function SlideContent({ slide }: { slide: Slide }) {
       {/* Content Grid */}
       <div className={`grid gap-6 md:gap-8 ${hasCode || hasDiagram ? "lg:grid-cols-2" : "lg:grid-cols-1 max-w-3xl mx-auto"}`}>
         {/* Bullet Points - Vercel card style */}
-        <div className="space-y-3">
-          {slide.content.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-start gap-4 p-4 rounded-lg bg-black border border-[#191919] hover:border-[#333] transition-all"
-            >
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white text-black text-xs font-bold flex-shrink-0 mt-0.5">
-                {index + 1}
+        {slide.content.length > 0 && (
+          <div className="space-y-3">
+            {slide.content.map((item, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-4 p-4 rounded-lg bg-black border border-[#191919] hover:border-[#333] transition-all"
+              >
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white text-black text-xs font-bold flex-shrink-0 mt-0.5">
+                  {index + 1}
+                </div>
+                <p className="text-[15px] text-[#ccc] leading-relaxed">{item}</p>
               </div>
-              <p className="text-[15px] text-[#ccc] leading-relaxed">{item}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Code or Diagram */}
         {hasCode && (

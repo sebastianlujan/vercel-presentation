@@ -33,6 +33,7 @@ import {
 } from "lucide-react"
 
 type DiagramType = 
+  | "intro-hero"
   | "agent" 
   | "ai-sdk" 
   | "ai-gateway" 
@@ -49,6 +50,8 @@ type DiagramType =
 
 export function Diagram({ type }: { type: DiagramType }) {
   switch (type) {
+    case "intro-hero":
+      return <IntroHeroDiagram />
     case "agent":
       return <AgentDiagram />
     case "ai-sdk":
@@ -78,6 +81,74 @@ export function Diagram({ type }: { type: DiagramType }) {
     default:
       return null
   }
+}
+
+// Vercel Intro Hero with prismatic triangle
+function IntroHeroDiagram() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-8 p-8 w-full min-h-[400px]">
+      {/* Prismatic Triangle */}
+      <div className="relative">
+        {/* Rainbow refraction beams */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          {/* Light rays emanating from triangle */}
+          <div className="absolute w-[400px] h-[400px] -translate-x-1/2 -translate-y-1/2">
+            {/* Prismatic light beams */}
+            <div className="absolute top-1/2 left-1/2 w-[300px] h-[2px] origin-left rotate-[15deg] bg-gradient-to-r from-transparent via-[#ff0080] to-transparent opacity-60" style={{ transform: 'translateY(-50%) rotate(15deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[280px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#ff4d4d] to-transparent opacity-50" style={{ transform: 'translateY(-50%) rotate(25deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[320px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#f5a623] to-transparent opacity-60" style={{ transform: 'translateY(-50%) rotate(35deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[260px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#50e3c2] to-transparent opacity-50" style={{ transform: 'translateY(-50%) rotate(45deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[340px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#0070f3] to-transparent opacity-60" style={{ transform: 'translateY(-50%) rotate(55deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[290px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#7928ca] to-transparent opacity-50" style={{ transform: 'translateY(-50%) rotate(65deg)' }} />
+            
+            {/* Mirror rays on the other side */}
+            <div className="absolute top-1/2 left-1/2 w-[300px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#7928ca] to-transparent opacity-60" style={{ transform: 'translateY(-50%) rotate(-15deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[280px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#0070f3] to-transparent opacity-50" style={{ transform: 'translateY(-50%) rotate(-25deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[320px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#50e3c2] to-transparent opacity-60" style={{ transform: 'translateY(-50%) rotate(-35deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[260px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#f5a623] to-transparent opacity-50" style={{ transform: 'translateY(-50%) rotate(-45deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[340px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#ff4d4d] to-transparent opacity-60" style={{ transform: 'translateY(-50%) rotate(-55deg)' }} />
+            <div className="absolute top-1/2 left-1/2 w-[290px] h-[2px] origin-left bg-gradient-to-r from-transparent via-[#ff0080] to-transparent opacity-50" style={{ transform: 'translateY(-50%) rotate(-65deg)' }} />
+          </div>
+        </div>
+        
+        {/* Main Triangle - Vercel logo style */}
+        <div className="relative z-10 float-animation triangle-glow">
+          <svg 
+            width="140" 
+            height="121" 
+            viewBox="0 0 76 65" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
+          </svg>
+        </div>
+      </div>
+      
+      {/* Key features */}
+      <div className="flex items-center gap-6 mt-4">
+        {[
+          { label: "AI SDK", color: "#0070f3" },
+          { label: "AI Gateway", color: "#50e3c2" },
+          { label: "MCP", color: "#7928ca" },
+          { label: "v0", color: "#ff0080" },
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div 
+              className="w-2 h-2 rounded-full" 
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-xs text-[#888] font-medium">{item.label}</span>
+          </div>
+        ))}
+      </div>
+      
+      {/* Tagline */}
+      <p className="text-sm text-[#666] text-center max-w-md">
+        From prototype to production with the complete AI development platform
+      </p>
+    </div>
+  )
 }
 
 // Minimal card component

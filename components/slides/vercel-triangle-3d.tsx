@@ -1,40 +1,38 @@
 "use client"
 
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, useEffect, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Float } from "@react-three/drei"
 import * as THREE from "three"
 
-// Floating particles in the fog
-function Particles({ count = 50 }) {
+// Floating particles - minimal SF fog effect
+function Particles({ count = 80 }) {
   const mesh = useRef<THREE.Points>(null)
+  const initialPositions = useRef<Float32Array | null>(null)
   
-  const [positions, sizes] = useMemo(() => {
-    const positions = new Float32Array(count * 3)
-    const sizes = new Float32Array(count)
-    
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 8
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 8
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 4 - 2
-      sizes[i] = Math.random() * 2 + 0.5
+      pos[i * 3] = (Math.random() - 0.5) * 10
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 6
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1
     }
-    
-    return [positions, sizes]
+    return pos
   }, [count])
   
-  useFrame((state) => {
-    if (mesh.current) {
-      const positions = mesh.current.geometry.attributes.position.array as Float32Array
+  useEffect(() => {
+    initialPositions.current = new Float32Array(positions)
+  }, [positions])
+  
+  useFrame(({ clock }) => {
+    if (mesh.current && initialPositions.current) {
+      const pos = mesh.current.geometry.attributes.position.array as Float32Array
+      const time = clock.getElapsedTime()
+      
       for (let i = 0; i < count; i++) {
-        // Slow upward drift
-        positions[i * 3 + 1] += 0.002
-        // Reset particles that drift too high
-        if (positions[i * 3 + 1] > 4) {
-          positions[i * 3 + 1] = -4
-        }
-        // Subtle horizontal sway
-        positions[i * 3] += Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.001
+        const i3 = i * 3
+        // Gentle drift
+        pos[i3 + 1] = initialPositions.current[i3 + 1] + Math.sin(time * 0.15 + i * 0.5) * 0.3
+        pos[i3] = initialPositions.current[i3] + Math.cos(time * 0.1 + i * 0.3) * 0.2
       }
       mesh.current.geometry.attributes.position.needsUpdate = true
     }
@@ -49,18 +47,12 @@ function Particles({ count = 50 }) {
           array={positions}
           itemSize={3}
         />
-        <bufferAttribute
-          attach="attributes-size"
-          count={count}
-          array={sizes}
-          itemSize={1}
-        />
       </bufferGeometry>
       <pointsMaterial
-        size={0.015}
+        size={0.02}
         color="#ffffff"
         transparent
-        opacity={0.4}
+        opacity={0.25}
         sizeAttenuation
         depthWrite={false}
       />
@@ -68,74 +60,94 @@ function Particles({ count = 50 }) {
   )
 }
 
-// Solid white Vercel triangle
+// Clean white Vercel triangle
 function Triangle() {
   const meshRef = useRef<THREE.Mesh>(null)
   
   const geometry = useMemo(() => {
     const shape = new THREE.Shape()
-    const size = 1.8
+    const size = 2
     const height = size * Math.sqrt(3) / 2
     
-    shape.moveTo(0, height * 0.6)
-    shape.lineTo(size / 2, -height * 0.4)
-    shape.lineTo(-size / 2, -height * 0.4)
+    // Vercel triangle pointing up
+    shape.moveTo(0, height * 0.55)
+    shape.lineTo(size / 2, -height * 0.45)
+    shape.lineTo(-size / 2, -height * 0.45)
     shape.closePath()
     
     const extrudeSettings = {
-      depth: 0.08,
+      depth: 0.15,
       bevelEnabled: true,
-      bevelThickness: 0.01,
-      bevelSize: 0.01,
-      bevelSegments: 2,
+      bevelThickness: 0.02,
+      bevelSize: 0.02,
+      bevelSegments: 3,
     }
     
     return new THREE.ExtrudeGeometry(shape, extrudeSettings)
   }, [])
   
-  useFrame((state) => {
+  useFrame(({ clock }) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.08
+      const time = clock.getElapsedTime()
+      // Subtle floating
+      meshRef.current.position.y = Math.sin(time * 0.5) * 0.08
+      // Very gentle rotation
+      meshRef.current.rotation.y = Math.sin(time * 0.3) * 0.06
     }
   })
   
   return (
-    <Float
-      speed={1.5}
-      rotationIntensity={0.1}
-      floatIntensity={0.3}
-      floatingRange={[-0.05, 0.05]}
-    >
-      <mesh ref={meshRef} geometry={geometry}>
-        <meshStandardMaterial
-          color="#ffffff"
-          emissive="#ffffff"
-          emissiveIntensity={0.1}
-          roughness={0.1}
-          metalness={0.1}
-        />
-      </mesh>
-    </Float>
+    <mesh ref={meshRef} geometry={geometry} position={[0, 0, 0]}>
+      <meshStandardMaterial
+        color="#ffffff"
+        roughness={0.15}
+        metalness={0}
+      />
+    </mesh>
   )
 }
 
 export function VercelTriangle3D() {
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
+  if (!mounted) {
+    return (
+      <div className="w-[340px] h-[340px] flex items-center justify-center">
+        <svg 
+          width="100" 
+          height="87" 
+          viewBox="0 0 76 65" 
+          fill="none" 
+          className="opacity-30"
+        >
+          <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
+        </svg>
+      </div>
+    )
+  }
+  
   return (
-    <div className="w-[320px] h-[320px] relative">
+    <div className="w-[340px] h-[340px]">
       <Canvas
-        camera={{ position: [0, 0, 4], fov: 40 }}
+        camera={{ position: [0, 0, 5], fov: 35 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
+        dpr={[1, 2]}
       >
-        {/* Minimal lighting */}
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[0, 5, 5]} intensity={0.8} />
+        {/* Clean lighting - no harsh shadows */}
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[2, 4, 5]} intensity={0.6} color="#ffffff" />
+        <directionalLight position={[-2, -2, 3]} intensity={0.2} color="#ffffff" />
         
-        {/* Fog */}
-        <fog attach="fog" args={["#000000", 3, 10]} />
+        {/* Black fog fading into distance */}
+        <fog attach="fog" args={["#000000", 4, 12]} />
         
         {/* Scene */}
-        <Particles count={60} />
+        <Particles count={80} />
         <Triangle />
       </Canvas>
     </div>

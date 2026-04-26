@@ -237,14 +237,21 @@ function SlideContent({ slide }: { slide: Slide }) {
         {slide.subtitle && (
           <p className="text-base md:text-lg text-[#555] max-w-md mx-auto text-center mt-3 font-light">{slide.subtitle}</p>
         )}
-        {/* Buidlers logo */}
-        <div className="mt-12 flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-          <span className="text-xs text-[#444] uppercase tracking-widest mr-3">presented by</span>
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%2014%20%283%29-r2XScM8i9Tm4KGWMZl477h62Snhfvr.png"
-            alt="buidlers"
-            className="h-7 w-auto"
-          />
+        {/* Buidlers logo - custom with blinking rectangle */}
+        <div className="mt-12 flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
+          <span className="text-xs text-[#444] uppercase tracking-widest">presented by</span>
+          <div className="flex items-center">
+            <span
+              className="font-bold text-[#e8e05a] leading-none"
+              style={{ fontSize: "1.6rem", fontFamily: "sans-serif", letterSpacing: "-0.02em" }}
+            >
+              buidlers
+            </span>
+            <span
+              className="ml-[3px] inline-block bg-[#e8e05a] blink-rect"
+              style={{ width: "0.45rem", height: "1.9rem" }}
+            />
+          </div>
         </div>
       </div>
     )

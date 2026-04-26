@@ -237,19 +237,25 @@ function SlideContent({ slide }: { slide: Slide }) {
         {slide.subtitle && (
           <p className="text-base md:text-lg text-[#555] max-w-md mx-auto text-center mt-3 font-light">{slide.subtitle}</p>
         )}
-        {/* Buidlers logo - custom with blinking rectangle */}
+        {/* Buidlers logo - pixel perfect with blinking rectangle overlay */}
         <div className="mt-12 flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
           <span className="text-xs text-[#444] uppercase tracking-widest">presented by</span>
-          <div className="flex items-center">
+          <div className="relative">
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%2014%20%283%29-akqGQf5UVVZsD0scganOQv3TCYZZzk.png"
+              alt="buidlers"
+              className="h-6"
+              style={{ filter: "brightness(0.95)" }}
+            />
+            {/* Blinking rectangle overlay - positioned exactly over the static rectangle */}
             <span
-              className="font-bold text-[#e8e05a] leading-none"
-              style={{ fontSize: "1.6rem", fontFamily: "sans-serif", letterSpacing: "-0.02em" }}
-            >
-              buidlers
-            </span>
-            <span
-              className="ml-[4px] inline-block bg-[#e8e05a] blink-rect"
-              style={{ width: "1.1rem", height: "1.9rem" }}
+              className="absolute blink-rect bg-[#e8e05a]"
+              style={{
+                right: "0px",
+                top: "0px",
+                width: "12%",
+                height: "100%",
+              }}
             />
           </div>
         </div>

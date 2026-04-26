@@ -630,7 +630,7 @@ function VercelEcosystemDiagram() {
     <div className="flex flex-col items-center gap-5 p-6 w-full">
       {/* Vercel Logo */}
       <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-xl float-animation">
-        <Triangle className="w-8 h-8 text-black fill-black" />
+        <VercelLogo className="w-8 h-8 text-black" />
       </div>
       
       <div className="text-sm font-semibold text-white">Vercel Platform</div>

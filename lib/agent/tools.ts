@@ -50,19 +50,25 @@ export const searchKnowledge = tool({
     category: z.string().optional().describe("Filter by category: account, billing, api, onboarding, team")
   }),
   execute: async ({ query, category }) => {
-    // Simulate search delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    let results = knowledgeBase.filter(article => 
-      article.title.toLowerCase().includes(query.toLowerCase()) ||
-      article.content.toLowerCase().includes(query.toLowerCase())
-    )
-    
+    await new Promise(resolve => setTimeout(resolve, 300))
+
+    // Split query into keywords and match any of them
+    const keywords = query.toLowerCase().split(/\s+/).filter(k => k.length > 2)
+
+    let results = knowledgeBase.filter(article => {
+      const text = `${article.title} ${article.content} ${article.category}`.toLowerCase()
+      return keywords.some(keyword => text.includes(keyword))
+    })
+
     if (category) {
       results = results.filter(article => article.category === category)
     }
-    
-    return results.slice(0, 3)
+
+    if (results.length === 0) {
+      return { found: false, message: `No articles found for "${query}". Consider creating a support ticket.` }
+    }
+
+    return { found: true, results: results.slice(0, 3) }
   }
 })
 

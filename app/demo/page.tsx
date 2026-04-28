@@ -128,25 +128,27 @@ export default function DemoPage() {
                   <div className="text-sm text-[#ccc] leading-relaxed">
                     {message.parts.map((part, index) => {
                       if (part.type === "text") {
-                        return <span key={index}>{part.text}</span>
+                        return <p key={index} className="whitespace-pre-wrap">{part.text}</p>
                       }
                       if (part.type === "tool-invocation") {
+                        const inv = part.toolInvocation
+                        const isDone = inv.state === "output-available"
                         return (
                           <div key={index} className="my-2 p-3 rounded-lg bg-[#0a0a0a] border border-[#222]">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Wrench className="w-3 h-3 text-[#888]" />
-                              <span className="text-xs font-mono text-[#888]">
-                                {part.toolInvocation.toolName}
-                              </span>
-                              {part.toolInvocation.state === "output-available" ? (
-                                <span className="text-xs text-green-500">completed</span>
-                              ) : (
-                                <Loader2 className="w-3 h-3 animate-spin text-[#666]" />
-                              )}
+                            <div className="flex items-center gap-2 mb-1">
+                              <Wrench className="w-3 h-3 text-[#666]" />
+                              <span className="text-xs font-mono text-[#888]">{inv.toolName}</span>
+                              {isDone
+                                ? <span className="text-[10px] text-green-500 ml-auto">done</span>
+                                : <Loader2 className="w-3 h-3 animate-spin text-[#555] ml-auto" />
+                              }
                             </div>
-                            {part.toolInvocation.state === "output-available" && (
-                              <pre className="text-xs text-[#555] overflow-x-auto">
-                                {JSON.stringify(part.toolInvocation.output, null, 2)}
+                            <div className="text-[10px] text-[#555] font-mono">
+                              input: {JSON.stringify(inv.input)}
+                            </div>
+                            {isDone && (
+                              <pre className="text-[10px] text-[#444] mt-1 overflow-x-auto max-h-24">
+                                {JSON.stringify(inv.output, null, 2)}
                               </pre>
                             )}
                           </div>

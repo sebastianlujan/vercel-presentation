@@ -56,18 +56,28 @@ export default function DemoPage() {
           <h3 className="text-xs font-medium text-[#666] uppercase tracking-wider mb-4">Available Tools</h3>
           <div className="space-y-3">
             {[
-              { name: "searchKnowledge", desc: "Search knowledge base articles" },
-              { name: "getTicketHistory", desc: "View support ticket history" },
-              { name: "createTicket", desc: "Create new support ticket" },
-              { name: "checkSystemStatus", desc: "Check service status" },
+              { name: "searchKnowledge", desc: "Search knowledge base articles", query: "How do I reset my password?" },
+              { name: "getTicketHistory", desc: "View support ticket history", query: "Show my recent support tickets" },
+              { name: "createTicket", desc: "Create new support ticket", query: "I need to open a ticket for a billing issue" },
+              { name: "checkSystemStatus", desc: "Check service status", query: "Is the API currently working?" },
             ].map((tool) => (
-              <div key={tool.name} className="p-3 rounded-lg border border-[#191919] hover:border-[#333] transition-colors">
+              <button
+                key={tool.name}
+                onClick={() => {
+                  if (isLoading) return
+                  sendMessage({ text: tool.query })
+                  setInput("")
+                }}
+                disabled={isLoading}
+                className="w-full text-left p-3 rounded-lg border border-[#191919] hover:border-[#444] hover:bg-[#0a0a0a] transition-all disabled:opacity-40 disabled:cursor-not-allowed group"
+              >
                 <div className="flex items-center gap-2 mb-1">
-                  <Wrench className="w-3 h-3 text-[#666]" />
+                  <Wrench className="w-3 h-3 text-[#666] group-hover:text-white transition-colors" />
                   <span className="text-xs font-mono text-white">{tool.name}</span>
+                  <span className="ml-auto text-[10px] text-[#444] group-hover:text-[#666]">click to run</span>
                 </div>
                 <p className="text-xs text-[#555]">{tool.desc}</p>
-              </div>
+              </button>
             ))}
           </div>
           

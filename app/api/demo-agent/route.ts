@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json()
 
   const result = streamText({
-    model: "anthropic/claude-sonnet-4",
+    model: "openai/gpt-4o-mini",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
     tools: agentTools,

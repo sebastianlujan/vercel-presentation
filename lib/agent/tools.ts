@@ -1,46 +1,6 @@
 import { tool } from "ai"
 import { z } from "zod"
-
-// Mock knowledge base data for the demo
-const knowledgeBase = [
-  {
-    id: "1",
-    title: "Password Reset Guide",
-    content: "To reset your password, go to Settings > Security > Reset Password. You'll receive an email with a reset link.",
-    category: "account"
-  },
-  {
-    id: "2", 
-    title: "Billing FAQ",
-    content: "We accept all major credit cards. Billing occurs on the 1st of each month. You can view invoices in Settings > Billing.",
-    category: "billing"
-  },
-  {
-    id: "3",
-    title: "API Rate Limits",
-    content: "Free tier: 100 requests/minute. Pro tier: 1000 requests/minute. Enterprise: unlimited. Rate limit headers are included in responses.",
-    category: "api"
-  },
-  {
-    id: "4",
-    title: "Getting Started",
-    content: "Welcome! Start by creating your first project. Click 'New Project' and follow the wizard. Need help? Chat with our AI assistant.",
-    category: "onboarding"
-  },
-  {
-    id: "5",
-    title: "Team Management",
-    content: "Invite team members via Settings > Team > Invite. Roles: Admin (full access), Member (read/write), Viewer (read only).",
-    category: "team"
-  }
-]
-
-// Mock ticket data for the demo
-const tickets = [
-  { id: "T-001", title: "Cannot login", status: "open", priority: "high", created_at: "2024-01-15" },
-  { id: "T-002", title: "Billing question", status: "closed", priority: "medium", created_at: "2024-01-10" },
-  { id: "T-003", title: "API integration help", status: "open", priority: "low", created_at: "2024-01-18" },
-]
+import { createClient } from "@/lib/supabase/server"
 
 // Tool: Search knowledge base
 export const searchKnowledge = tool({
@@ -50,19 +10,26 @@ export const searchKnowledge = tool({
     category: z.string().optional().describe("Filter by category: account, billing, api, onboarding, team")
   }),
   execute: async ({ query, category }) => {
-    // Simulate search delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    let results = knowledgeBase.filter(article => 
-      article.title.toLowerCase().includes(query.toLowerCase()) ||
-      article.content.toLowerCase().includes(query.toLowerCase())
-    )
-    
+    const supabase = await createClient()
+
+    let queryBuilder = supabase
+      .from("knowledge_base")
+      .select("id, title, content, category")
+      .or(`title.ilike.%${query}%,content.ilike.%${query}%`)
+      .limit(3)
+
     if (category) {
-      results = results.filter(article => article.category === category)
+      queryBuilder = queryBuilder.eq("category", category)
     }
-    
-    return results.slice(0, 3)
+
+    const { data, error } = await queryBuilder
+
+    if (error) {
+      console.error("[v0] searchKnowledge error:", error.message)
+      return []
+    }
+
+    return data ?? []
   }
 })
 
@@ -74,15 +41,26 @@ export const getTicketHistory = tool({
     limit: z.number().optional().describe("Maximum number of tickets to return")
   }),
   execute: async ({ status, limit = 10 }) => {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    
-    let results = [...tickets]
-    
+    const supabase = await createClient()
+
+    let queryBuilder = supabase
+      .from("tickets")
+      .select("id, title, status, priority, created_at")
+      .order("created_at", { ascending: false })
+      .limit(limit)
+
     if (status && status !== "all") {
-      results = results.filter(ticket => ticket.status === status)
+      queryBuilder = queryBuilder.eq("status", status)
     }
-    
-    return results.slice(0, limit)
+
+    const { data, error } = await queryBuilder
+
+    if (error) {
+      console.error("[v0] getTicketHistory error:", error.message)
+      return []
+    }
+
+    return data ?? []
   }
 })
 
@@ -95,21 +73,39 @@ export const createTicket = tool({
     priority: z.enum(["low", "medium", "high", "urgent"]).describe("Ticket priority level")
   }),
   execute: async ({ title, description, priority }) => {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    
-    const newTicket = {
-      id: `T-${String(tickets.length + 1).padStart(3, '0')}`,
-      title,
-      description,
-      priority,
-      status: "open",
-      created_at: new Date().toISOString().split('T')[0]
+    const supabase = await createClient()
+
+    // Generate a ticket ID based on current count
+    const { count } = await supabase
+      .from("tickets")
+      .select("*", { count: "exact", head: true })
+
+    const ticketId = `T-${String((count ?? 0) + 1).padStart(3, "0")}`
+
+    const { data, error } = await supabase
+      .from("tickets")
+      .insert({
+        id: ticketId,
+        title,
+        description,
+        priority,
+        status: "open",
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error("[v0] createTicket error:", error.message)
+      return {
+        success: false,
+        message: "Failed to create ticket. Please try again."
+      }
     }
-    
+
     return {
       success: true,
-      ticket: newTicket,
-      message: `Ticket ${newTicket.id} created successfully. A support agent will respond within 24 hours.`
+      ticket: data,
+      message: `Ticket ${ticketId} created successfully. A support agent will respond within 24 hours.`
     }
   }
 })
@@ -119,8 +115,6 @@ export const checkSystemStatus = tool({
   description: "Check the current system status and any ongoing incidents",
   inputSchema: z.object({}),
   execute: async () => {
-    await new Promise(resolve => setTimeout(resolve, 200))
-    
     return {
       status: "operational",
       services: {
